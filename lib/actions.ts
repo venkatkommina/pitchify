@@ -4,6 +4,8 @@ import { auth } from "@/auth";
 import { parseServerActionResponse } from "./utils";
 import slugify from "slugify";
 import { writeClient } from "@/sanity/lib/write-client";
+import { client } from "@/sanity/lib/client";
+import { revalidatePath } from "next/cache";
 
 export const createPitch = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,3 +60,15 @@ export const createPitch = async (
     });
   }
 };
+
+export async function deleteStartup(id: string) {
+  try {
+    await client.delete(id);
+    // Optionally revalidate relevant paths
+    revalidatePath("/user");
+    revalidatePath(`/startup/${id}`);
+  } catch (error) {
+    console.error("Failed to delete startup:", error);
+    throw error;
+  }
+}

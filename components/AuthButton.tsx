@@ -11,8 +11,11 @@ const AuthButtons = ({ session }: { session: Session | null }) => {
     <>
       {session && session.id ? (
         <>
-          <button onClick={() => signOut()}>
-            <span className="max-sm:hidden">Logout</span>
+          <button
+            onClick={() => signOut()}
+            className="sm:bg-primary sm:text-white sm:px-4 sm:py-2 sm:rounded sm:hover:bg-red-600 hover:cursor-pointer"
+          >
+            <span className="max-sm:hidden ">Logout</span>
             <LogOut className="size-6 sm:hidden text-red-500" />
           </button>
 

@@ -6,12 +6,14 @@ import {
 } from "@/sanity/lib/queries";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import markdownit from "markdown-it";
 import View from "@/components/View";
 import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
+import { auth } from "@/auth";
+import { deleteStartup } from "@/lib/actions";
 
 const md = markdownit();
 
@@ -30,6 +32,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   if (!post) return notFound();
 
   const parsedContent = md.render(post.pitch || "");
+
+  const session = await auth();
   return (
     <>
       <section className="pink_container !min-h-[230px]">
@@ -69,6 +73,23 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
             <p className="category-tag">{post.category}</p>
           </div>
+
+          {session?.id === post.author?._id && (
+            <form
+              action={async () => {
+                "use server";
+                await deleteStartup(post._id);
+                redirect(`/user/${session.id}`);
+              }}
+            >
+              <button
+                type="submit"
+                className="bg-primary text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Delete Startup
+              </button>
+            </form>
+          )}
 
           <h3 className="text-30-bold">Pitch Details</h3>
           {parsedContent ? (
