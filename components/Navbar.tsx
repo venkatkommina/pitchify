@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import AuthButtons from "./AuthButton";
 import { Session } from "next-auth";
+import { BadgePlus } from "lucide-react";
 
 const Navbar = async () => {
   const session: Session | null = await auth();
@@ -22,6 +23,7 @@ const Navbar = async () => {
         <div className="flex items-center gap-5 text-black">
           <Link href="/startup/create">
             <span className="max-sm:hidden">Create</span>
+            <BadgePlus className="size-6 sm:hidden" />
           </Link>
 
           <AuthButtons session={session} />

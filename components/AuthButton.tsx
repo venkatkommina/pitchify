@@ -1,21 +1,29 @@
 "use client";
 
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { LogOut } from "lucide-react";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
+import Link from "next/link";
 
 const AuthButtons = ({ session }: { session: Session | null }) => {
   return (
     <>
-      {session && session.user ? (
+      {session && session.id ? (
         <>
-          <button
-            onClick={() => signOut()}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer max-xs:text-base"
-          >
-            Logout
+          <button onClick={() => signOut()}>
+            <span className="max-sm:hidden">Logout</span>
+            <LogOut className="size-6 sm:hidden text-red-500" />
           </button>
 
-          <span className="max-xs:text-base">{session.user.name}</span>
+          <Link href={`/user/${session?.id}`}>
+            <Avatar className="size-10">
+              <AvatarImage
+                src={session?.user?.image}
+                alt={session?.user?.name}
+              />
+            </Avatar>
+          </Link>
         </>
       ) : (
         <>
